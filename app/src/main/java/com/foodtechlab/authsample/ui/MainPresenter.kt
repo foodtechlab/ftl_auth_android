@@ -43,26 +43,24 @@ class MainPresenter : MvpPresenter<MainView>(), ExceptionHandlerListener {
         cancellable: Boolean,
         shouldReauthorize: Boolean
     ) {
-        presenterScope.launch {
-            viewState.showMessage(
-                message,
-                title,
-                posBtnText,
-                negBtnText,
-                negBtnAction,
-                posBtnAction,
-                showSupportButton,
-                cancellable,
-                shouldReauthorize
-            )
-        }
+        viewState.showMessage(
+            message,
+            title,
+            posBtnText,
+            negBtnText,
+            negBtnAction,
+            posBtnAction,
+            showSupportButton,
+            cancellable,
+            shouldReauthorize
+        )
     }
 
     private fun authSms() {
         presenterScope.launch {
             try {
                 authManager.authSms("89029999999")
-                authManager.loginSms("1234", "89029999999")
+                authManager.loginSms("12345", "89029999999")
             } catch (e: Exception) {
                 logError(TAG, e.formatError().second)
             }
