@@ -1,19 +1,17 @@
 package com.foodtechlab.auth.cache
 
-import com.foodtechlab.auth.api.model.response.Token
-
 /**
  * Created by Umalt on 1/14/21
  */
 interface IAuthCache {
 
-    fun saveAccessToken(token: Token)
+    fun saveAccessToken(token: String)
 
-    fun saveRefreshToken(token: Token)
+    fun saveRefreshToken(token: String)
 
-    fun getAccessToken(): Token?
+    fun getAccessToken(): String
 
-    fun getRefreshToken(): Token?
+    fun getRefreshToken(): String
 
     fun isAuthCompleted(): Boolean
 

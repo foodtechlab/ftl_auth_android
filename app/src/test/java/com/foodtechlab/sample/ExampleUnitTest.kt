@@ -1,4 +1,4 @@
-package com.foodtechlab.auth
+package com.foodtechlab.sample
 
 import org.junit.Test
 

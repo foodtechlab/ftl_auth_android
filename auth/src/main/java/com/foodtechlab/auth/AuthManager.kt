@@ -1,11 +1,11 @@
 package com.foodtechlab.auth
 
+import android.content.Context
 import android.content.SharedPreferences
 import com.foodtechlab.auth.api.model.request.AuthRequest
 import com.foodtechlab.auth.api.model.request.RefreshRequest
 import com.foodtechlab.auth.api.model.response.AuthResponse
 import com.foodtechlab.auth.api.model.response.TimerResponse
-import com.foodtechlab.auth.api.model.response.Token
 import com.foodtechlab.auth.api.service.AuthApiServiceFactory
 import com.foodtechlab.auth.cache.AuthPrefsCache
 import com.foodtechlab.auth.exception.ExceptionHandlerListener
@@ -22,28 +22,34 @@ class AuthManager constructor(
     private val baseUrl: String,
     private val apiVersion: String,
     private val sharedPrefs: SharedPreferences,
-    private val listener: ExceptionHandlerListener,
-    private val apiInterceptor: Interceptor? = null
+    private val apiInterceptor: Interceptor? = null,
+    applicationContext: Context
 ) {
 
     val isAuthCompleted: Boolean
         get() = authCache.isAuthCompleted()
 
+    var listener: ExceptionHandlerListener? = null
+
     private val authCache by lazy { AuthPrefsCache(sharedPrefs) }
 
     private val authApiService by lazy {
-        AuthApiServiceFactory.makeAuthApiService(baseUrl, apiVersion, apiInterceptor)
+        AuthApiServiceFactory.makeAuthApiService(baseUrl, apiInterceptor)
+    }
+
+    init {
+        AuthManager.applicationContext = applicationContext
     }
 
     suspend fun authSms(phone: String): TimerResponse? {
         return try {
             tryWithAuthChecking(this, listener) {
-                authApiService.authSms(AuthRequest(phoneNumber = phone))
+                authApiService.authSms(apiVersion, AuthRequest(phoneNumber = phone))
             }?.result
         } catch (e: Exception) {
             logError(e.message)
             val err = e.formatError()
-            listener.showMessage(err.third, err.second, getString(R.string.common_ok))
+            listener?.showMessage(err.second, err.third, getString(R.string.common_ok))
             null
         }
     }
@@ -51,7 +57,7 @@ class AuthManager constructor(
     suspend fun loginSms(code: String, phone: String): AuthResponse? {
         return try {
             tryWithAuthChecking(this, listener) {
-                authApiService.loginSms(AuthRequest(phoneNumber = phone, code = code))
+                authApiService.loginSms(apiVersion, AuthRequest(phoneNumber = phone, code = code))
             }?.result?.apply {
                 saveAccessToken(accessToken)
                 saveRefreshToken(refreshToken)
@@ -59,7 +65,7 @@ class AuthManager constructor(
         } catch (e: Exception) {
             logError(e.message)
             val err = e.formatError()
-            listener.showMessage(err.third, err.second, getString(R.string.common_ok))
+            listener?.showMessage(err.second, err.third, getString(R.string.common_ok))
             null
         }
     }
@@ -67,7 +73,10 @@ class AuthManager constructor(
     suspend fun loginPassword(email: String, password: String): AuthResponse? {
         return try {
             tryWithAuthChecking(this, listener) {
-                authApiService.loginPassword(AuthRequest(email = email, password = password))
+                authApiService.loginPassword(
+                    apiVersion,
+                    AuthRequest(email = email, password = password)
+                )
             }?.result?.apply {
                 saveAccessToken(accessToken)
                 saveRefreshToken(refreshToken)
@@ -75,7 +84,7 @@ class AuthManager constructor(
         } catch (e: Exception) {
             logError(e.message)
             val err = e.formatError()
-            listener.showMessage(err.third, err.second, getString(R.string.common_ok))
+            listener?.showMessage(err.second, err.third, getString(R.string.common_ok))
             null
         }
     }
@@ -83,7 +92,7 @@ class AuthManager constructor(
     suspend fun refresh(): AuthResponse? {
         return try {
             tryWithAuthChecking(this, listener) {
-                authApiService.refresh(RefreshRequest(authCache.getRefreshToken()?.token))
+                authApiService.refresh(apiVersion, RefreshRequest(authCache.getRefreshToken()))
             }?.result?.apply {
                 saveAccessToken(accessToken)
                 saveRefreshToken(refreshToken)
@@ -91,7 +100,7 @@ class AuthManager constructor(
         } catch (e: Exception) {
             logError(e.message)
             val err = e.formatError()
-            listener.showMessage(err.third, err.second, getString(R.string.common_ok))
+            listener?.showMessage(err.second, err.third, getString(R.string.common_ok))
             null
         }
     }
@@ -106,20 +115,24 @@ class AuthManager constructor(
         } catch (e: Exception) {
             logError(e.message)
             val err = e.formatError()
-            listener.showMessage(err.third, err.second, getString(R.string.common_ok))
+            listener?.showMessage(err.second, err.third, getString(R.string.common_ok))
             null
         }
     }
 
-    internal fun saveAccessToken(token: Token) {
-        authCache.saveRefreshToken(token)
+    internal fun saveAccessToken(token: String) {
+        authCache.saveAccessToken(token)
     }
 
-    internal fun saveRefreshToken(token: Token) {
+    internal fun saveRefreshToken(token: String) {
         authCache.saveRefreshToken(token)
     }
 
     internal fun clearCache() {
         authCache.clear()
+    }
+
+    companion object {
+        internal lateinit var applicationContext: Context
     }
 }

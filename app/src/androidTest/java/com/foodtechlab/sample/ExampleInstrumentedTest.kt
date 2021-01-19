@@ -1,4 +1,4 @@
-package com.foodtechlab.auth
+package com.foodtechlab.sample
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

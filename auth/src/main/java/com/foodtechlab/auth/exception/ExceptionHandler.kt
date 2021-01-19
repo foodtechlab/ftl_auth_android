@@ -1,6 +1,5 @@
 package com.foodtechlab.auth.exception
 
-import android.content.res.Resources
 import android.util.MalformedJsonException
 import androidx.annotation.StringRes
 import com.foodtechlab.auth.AuthManager
@@ -48,92 +47,104 @@ const val NOT_EXIST = "NOT_EXIST"
 interface ExceptionHandlerListener {
 
     fun showMessage(
-        title: String?,
         message: String?,
-        textForButton: String,
-        showSupportButton: Boolean = false
+        title: String? = null,
+        posBtnText: String? = null,
+        negBtnText: String? = null,
+        negBtnAction: () -> Unit = {},
+        posBtnAction: () -> Unit = {},
+        showSupportButton: Boolean = false,
+        cancellable: Boolean = true,
+        shouldReauthorize: Boolean = false
     )
 }
 
 suspend fun <T : Any?> tryWithAuthChecking(
     authManager: AuthManager,
-    listener: ExceptionHandlerListener,
+    listener: ExceptionHandlerListener?,
     block: suspend () -> T
 ): T? {
-    return withContext(Dispatchers.IO) {
-        try {
-            block()
-        } catch (ex: HttpException) {
-            if (BuildConfig.DEBUG) {
-                logError(ex.message())
-            }
+    return try {
+        block()
+    } catch (ex: HttpException) {
+        if (BuildConfig.DEBUG) {
+            logError(ex.message())
+        }
 
-            val error = ex.response()?.errorBody()?.stringSuspending()?.let { getErrorType(it) }
+        val error = ex.response()?.errorBody()?.stringSuspending()?.let { getErrorType(it) }
 
-            when (ex.code()) {
-                401 -> {
-                    if (error?.domain == AUTH) {
-                        if (error.details == UNSUCCESSFUL_REFRESH) {
-                            authManager.clearCache()
-                        }
-                        listener.showMessage(
-                            error.presentationData?.title,
-                            error.presentationData?.message,
-                            getString(R.string.common_ok),
-                            showSupportButton = true
-                        )
+        getString(R.string.common_ok)
+
+        when (ex.code()) {
+            401 -> {
+                if (error?.domain == AUTH) {
+                    if (error.details == UNSUCCESSFUL_REFRESH) {
+                        authManager.clearCache()
                     }
-                    null
+                    listener?.showMessage(
+                        error.presentationData?.message,
+                        error.presentationData?.title,
+                        getString(R.string.common_ok),
+                        showSupportButton = true,
+                        cancellable = false,
+                        shouldReauthorize = true
+                    )
                 }
-                403 -> {
-                    when {
-                        error?.domain == AUTH && error.details == EXPIRED_TOKEN -> {
-                            try {
-                                authManager.refresh()?.apply {
-                                    authManager.saveAccessToken(accessToken)
-                                    authManager.saveRefreshToken(refreshToken)
-                                }
-                                block()
-                            } catch (e: HttpException) {
-                                logError(e.message())
-                                val err = e.formatError()
-                                if (e.code() == 401 && err.first == UNSUCCESSFUL_REFRESH) {
-                                    listener.showMessage(
-                                        error.presentationData?.title,
-                                        error.presentationData?.message,
-                                        getString(R.string.common_login)
-                                    )
-                                }
+                null
+            }
+            403 -> {
+                when {
+                    error?.domain == AUTH && error.details == EXPIRED_TOKEN -> {
+                        try {
+                            authManager.refresh()?.apply {
+                                authManager.saveAccessToken(accessToken)
+                                authManager.saveRefreshToken(refreshToken)
+                            }
+                            block()
+                        } catch (e: HttpException) {
+                            logError(e.message())
+                            val err = e.formatError()
+                            if (e.code() == 401 && err.first == UNSUCCESSFUL_REFRESH) {
+                                listener?.showMessage(
+                                    error.presentationData?.message,
+                                    error.presentationData?.title,
+                                    getString(R.string.common_login),
+                                    cancellable = false,
+                                    shouldReauthorize = true
+                                )
                             }
                         }
-                        error?.details == NOT_EXIST && error.domain == USER -> {
-                            listener.showMessage(
-                                error.presentationData?.title,
-                                error.presentationData?.message,
-                                getString(R.string.common_login),
-                                showSupportButton = true
-                            )
-                        }
-                        else -> {
-                            listener.showMessage(
-                                error?.presentationData?.title,
-                                error?.presentationData?.message,
-                                getString(R.string.common_ok),
-                                showSupportButton = true
-                            )
-                        }
                     }
-                    null
+                    error?.details == NOT_EXIST && error.domain == USER -> {
+                        listener?.showMessage(
+                            error.presentationData?.message,
+                            error.presentationData?.title,
+                            getString(R.string.common_login),
+                            showSupportButton = true,
+                            cancellable = false,
+                            shouldReauthorize = true
+                        )
+                    }
+                    else -> {
+                        listener?.showMessage(
+                            error?.presentationData?.message,
+                            error?.presentationData?.title,
+                            getString(R.string.common_ok),
+                            showSupportButton = true,
+                            cancellable = false,
+                            shouldReauthorize = true
+                        )
+                    }
                 }
-                else -> {
-                    listener.showMessage(
-                        error?.presentationData?.title,
-                        error?.presentationData?.message,
-                        getString(R.string.common_ok),
-                        showSupportButton = true
-                    )
-                    null
-                }
+                null
+            }
+            else -> {
+                listener?.showMessage(
+                    error?.presentationData?.message,
+                    error?.presentationData?.title,
+                    getString(R.string.common_ok)
+                )
+                null
             }
         }
     }
@@ -226,7 +237,7 @@ fun JSONObject.getString(key: String, def: String): String {
 }
 
 fun getString(@StringRes id: Int, vararg parameters: Any): String {
-    return Resources.getSystem().getString(id, *parameters)
+    return AuthManager.applicationContext.getString(id, *parameters)
 }
 
 @Suppress("BlockingMethodInNonBlockingContext")

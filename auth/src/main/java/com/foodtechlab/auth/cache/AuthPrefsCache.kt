@@ -1,7 +1,6 @@
 package com.foodtechlab.auth.cache
 
 import android.content.SharedPreferences
-import com.foodtechlab.auth.api.model.response.Token
 import com.squareup.moshi.Moshi
 
 /**
@@ -19,36 +18,36 @@ class AuthPrefsCache(private val prefs: SharedPreferences) : IAuthCache {
 
     private val tokenJsonAdapter = moshi.adapter(AuthCacheModel::class.java)
 
-    override fun saveAccessToken(token: Token) {
+    override fun saveAccessToken(token: String) {
         authCacheModel.accessToken = token
         prefs.edit()
             .putString(KEY_TOKENS, tokenJsonAdapter.toJson(authCacheModel))
             .apply()
     }
 
-    override fun saveRefreshToken(token: Token) {
+    override fun saveRefreshToken(token: String) {
         authCacheModel.refreshToken = token
         prefs.edit()
             .putString(KEY_TOKENS, tokenJsonAdapter.toJson(authCacheModel))
             .apply()
     }
 
-    override fun getAccessToken(): Token? {
+    override fun getAccessToken(): String {
         return authCacheModel.accessToken
     }
 
-    override fun getRefreshToken(): Token?{
+    override fun getRefreshToken(): String {
         return authCacheModel.refreshToken
     }
 
     override fun isAuthCompleted(): Boolean {
-        return authCacheModel.accessToken != null && authCacheModel.refreshToken != null
+        return authCacheModel.accessToken.isNotBlank() && authCacheModel.refreshToken.isNotBlank()
     }
 
     override fun clear() {
         with(authCacheModel) {
-            accessToken = null
-            refreshToken = null
+            accessToken = ""
+            refreshToken = ""
         }
         prefs.edit()
             .remove(KEY_TOKENS)
@@ -57,6 +56,6 @@ class AuthPrefsCache(private val prefs: SharedPreferences) : IAuthCache {
 }
 
 data class AuthCacheModel(
-    var accessToken: Token? = null,
-    var refreshToken: Token? = null
+    var accessToken: String = "",
+    var refreshToken: String = ""
 )
