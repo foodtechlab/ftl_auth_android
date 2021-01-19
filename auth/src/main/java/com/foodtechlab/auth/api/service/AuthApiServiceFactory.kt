@@ -14,12 +14,11 @@ import java.util.concurrent.TimeUnit
 object AuthApiServiceFactory {
 
     fun makeAuthApiService(
-        url: String,
-        apiVersion: String,
+        baseUrl: String,
         apiInterceptor: Interceptor?
     ): AuthApiService {
         return Retrofit.Builder()
-            .baseUrl(url + apiVersion)
+            .baseUrl(baseUrl)
             .client(makeOkHttpClient(apiInterceptor))
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
