@@ -1,0 +1,38 @@
+apply plugin: 'com.github.dcendents.android-maven'
+
+group='com.foodtechlab.auth'
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'aar'
+                groupId 'com.foodtechlab.auth'
+                artifactId 'auth'
+                name 'auth'
+                url 'https://github.com/foodtechlab/ftl_auth_android'
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'umalt'
+                        name 'Umalt Isakkhazhiev'
+                        email 'isakkhazhiev@gmail.com'
+                    }
+                }
+
+                scm {
+                    connection 'https://github.com/foodtechlab/ftl_auth_android.git'
+                    developerConnection 'https://github.com/foodtechlab/ftl_auth_android.git'
+                    url 'https://github.com/foodtechlab/ftl_auth_android'
+                }
+            }
+        }
+    }
+}

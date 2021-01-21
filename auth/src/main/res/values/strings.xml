@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--  Commons  -->
+    <string name="common_next">Далее</string>
+    <string name="common_ok">Понятно</string>
+    <string name="common_cancel">Отмена</string>
+    <string name="common_confirm">Подтвердить</string>
+    <string name="common_settings">Настройки</string>
+    <string name="common_start">Начать</string>
+    <string name="common_login">Осуществить вход</string>
+
+    <!-- Error messages -->
+    <string name="error_internal_server">Ошибка выполнения запроса. Пожалуйста, повторите попытку позже</string>
+    <string name="error_malformed_json">Ошибка загрузки данных. Пожалуйста, повторите попытку позже</string>
+    <string name="error_connect"> Проверьте подключение к WI-FI или сотовой сети и повторите попытку</string>
+    <string name="error_unknown">В приложении возникла ошибка</string>
+    <string name="error_title">Ошибка</string>
+    <string name="error_title_timeout">Превышено время ожидания данных</string>
+    <string name="error_title_connect">Отсутствует интернет-соединение</string>
+
+</resources>
