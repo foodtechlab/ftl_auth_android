@@ -61,7 +61,6 @@ interface ExceptionHandlerListener {
 
 suspend fun <T : Any?> tryWithAuthChecking(
     authManager: AuthManager,
-    listener: ExceptionHandlerListener?,
     block: suspend () -> T
 ): T? {
     return try {
@@ -81,7 +80,7 @@ suspend fun <T : Any?> tryWithAuthChecking(
                     if (error.details == UNSUCCESSFUL_REFRESH) {
                         authManager.clearCache()
                     }
-                    listener?.showMessage(
+                    authManager.listener?.showMessage(
                         error.presentationData?.message,
                         error.presentationData?.title,
                         getString(R.string.common_ok),
@@ -105,7 +104,7 @@ suspend fun <T : Any?> tryWithAuthChecking(
                             logError(e.message())
                             val err = e.formatError()
                             if (e.code() == 401 && err.first == UNSUCCESSFUL_REFRESH) {
-                                listener?.showMessage(
+                                authManager.listener?.showMessage(
                                     error.presentationData?.message,
                                     error.presentationData?.title,
                                     getString(R.string.common_login),
@@ -116,7 +115,7 @@ suspend fun <T : Any?> tryWithAuthChecking(
                         }
                     }
                     error?.details == NOT_EXIST && error.domain == USER -> {
-                        listener?.showMessage(
+                        authManager.listener?.showMessage(
                             error.presentationData?.message,
                             error.presentationData?.title,
                             getString(R.string.common_login),
@@ -126,7 +125,7 @@ suspend fun <T : Any?> tryWithAuthChecking(
                         )
                     }
                     else -> {
-                        listener?.showMessage(
+                        authManager.listener?.showMessage(
                             error?.presentationData?.message,
                             error?.presentationData?.title,
                             getString(R.string.common_ok),
@@ -139,7 +138,7 @@ suspend fun <T : Any?> tryWithAuthChecking(
                 null
             }
             else -> {
-                listener?.showMessage(
+                authManager.listener?.showMessage(
                     error?.presentationData?.message,
                     error?.presentationData?.title,
                     getString(R.string.common_ok)
