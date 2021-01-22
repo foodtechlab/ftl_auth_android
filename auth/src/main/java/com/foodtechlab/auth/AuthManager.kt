@@ -29,10 +29,10 @@ class AuthManager constructor(
     val isAuthCompleted: Boolean
         get() = authCache.isAuthCompleted()
 
-    val accessToken: String
+    val accessToken: String?
         get() = authCache.getAccessToken()
 
-    val refreshToken: String
+    val refreshToken: String?
         get() = authCache.getRefreshToken()
 
     var listener: ExceptionHandlerListener? = null
@@ -126,11 +126,11 @@ class AuthManager constructor(
         }
     }
 
-    fun saveAccessToken(token: String) {
+    fun saveAccessToken(token: String?) {
         authCache.saveAccessToken(token)
     }
 
-    fun saveRefreshToken(token: String) {
+    fun saveRefreshToken(token: String?) {
         authCache.saveRefreshToken(token)
     }
 

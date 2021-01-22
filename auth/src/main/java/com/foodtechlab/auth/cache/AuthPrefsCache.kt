@@ -18,30 +18,30 @@ class AuthPrefsCache(private val prefs: SharedPreferences) : IAuthCache {
 
     private val tokenJsonAdapter = moshi.adapter(AuthCacheModel::class.java)
 
-    override fun saveAccessToken(token: String) {
+    override fun saveAccessToken(token: String?) {
         authCacheModel.accessToken = token
         prefs.edit()
             .putString(KEY_TOKENS, tokenJsonAdapter.toJson(authCacheModel))
             .apply()
     }
 
-    override fun saveRefreshToken(token: String) {
+    override fun saveRefreshToken(token: String?) {
         authCacheModel.refreshToken = token
         prefs.edit()
             .putString(KEY_TOKENS, tokenJsonAdapter.toJson(authCacheModel))
             .apply()
     }
 
-    override fun getAccessToken(): String {
+    override fun getAccessToken(): String? {
         return authCacheModel.accessToken
     }
 
-    override fun getRefreshToken(): String {
+    override fun getRefreshToken(): String? {
         return authCacheModel.refreshToken
     }
 
     override fun isAuthCompleted(): Boolean {
-        return authCacheModel.accessToken.isNotBlank() && authCacheModel.refreshToken.isNotBlank()
+        return !authCacheModel.accessToken.isNullOrBlank() && !authCacheModel.refreshToken.isNullOrBlank()
     }
 
     override fun clear() {
@@ -56,6 +56,6 @@ class AuthPrefsCache(private val prefs: SharedPreferences) : IAuthCache {
 }
 
 data class AuthCacheModel(
-    var accessToken: String = "",
-    var refreshToken: String = ""
+    var accessToken: String? = null,
+    var refreshToken: String? = null
 )

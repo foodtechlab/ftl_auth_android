@@ -5,13 +5,13 @@ package com.foodtechlab.auth.cache
  */
 interface IAuthCache {
 
-    fun saveAccessToken(token: String)
+    fun saveAccessToken(token: String?)
 
-    fun saveRefreshToken(token: String)
+    fun saveRefreshToken(token: String?)
 
-    fun getAccessToken(): String
+    fun getAccessToken(): String?
 
-    fun getRefreshToken(): String
+    fun getRefreshToken(): String?
 
     fun isAuthCompleted(): Boolean
 
