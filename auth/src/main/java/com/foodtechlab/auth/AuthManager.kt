@@ -23,6 +23,7 @@ class AuthManager constructor(
     private val apiVersion: String,
     private val sharedPrefs: SharedPreferences,
     private val apiInterceptor: Interceptor? = null,
+    private val httpLoggingInterceptor: Interceptor? = null,
     applicationContext: Context
 ) {
 
@@ -40,7 +41,7 @@ class AuthManager constructor(
     private val authCache by lazy { AuthPrefsCache(sharedPrefs) }
 
     private val authApiService by lazy {
-        AuthApiServiceFactory.makeAuthApiService(baseUrl, apiInterceptor)
+        AuthApiServiceFactory.makeAuthApiService(baseUrl, apiInterceptor, httpLoggingInterceptor)
     }
 
     init {
