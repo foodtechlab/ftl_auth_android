@@ -29,6 +29,12 @@ class AuthManager constructor(
     val isAuthCompleted: Boolean
         get() = authCache.isAuthCompleted()
 
+    val accessToken: String
+        get() = authCache.getAccessToken()
+
+    val refreshToken: String
+        get() = authCache.getRefreshToken()
+
     var listener: ExceptionHandlerListener? = null
 
     private val authCache by lazy { AuthPrefsCache(sharedPrefs) }
@@ -43,7 +49,7 @@ class AuthManager constructor(
 
     suspend fun authSms(phone: String): TimerResponse? {
         return try {
-            tryWithAuthChecking(this, listener) {
+            tryWithAuthChecking(this) {
                 authApiService.authSms(apiVersion, AuthRequest(phoneNumber = phone))
             }?.result
         } catch (e: Exception) {
@@ -56,7 +62,7 @@ class AuthManager constructor(
 
     suspend fun loginSms(code: String, phone: String): AuthResponse? {
         return try {
-            tryWithAuthChecking(this, listener) {
+            tryWithAuthChecking(this) {
                 authApiService.loginSms(apiVersion, AuthRequest(phoneNumber = phone, code = code))
             }?.result?.apply {
                 saveAccessToken(accessToken)
@@ -72,7 +78,7 @@ class AuthManager constructor(
 
     suspend fun loginPassword(email: String, password: String): AuthResponse? {
         return try {
-            tryWithAuthChecking(this, listener) {
+            tryWithAuthChecking(this) {
                 authApiService.loginPassword(
                     apiVersion,
                     AuthRequest(email = email, password = password)
@@ -91,7 +97,7 @@ class AuthManager constructor(
 
     suspend fun refresh(): AuthResponse? {
         return try {
-            tryWithAuthChecking(this, listener) {
+            tryWithAuthChecking(this) {
                 authApiService.refresh(apiVersion, RefreshRequest(authCache.getRefreshToken()))
             }?.result?.apply {
                 saveAccessToken(accessToken)
@@ -107,7 +113,7 @@ class AuthManager constructor(
 
     suspend fun logout(): String? {
         return try {
-            tryWithAuthChecking(this, listener) {
+            tryWithAuthChecking(this) {
                 authApiService.logout()
             }?.result?.apply {
                 clearCache()
