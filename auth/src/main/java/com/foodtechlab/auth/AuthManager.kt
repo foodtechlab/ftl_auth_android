@@ -120,15 +120,15 @@ class AuthManager constructor(
         }
     }
 
-    internal fun saveAccessToken(token: String) {
+    fun saveAccessToken(token: String) {
         authCache.saveAccessToken(token)
     }
 
-    internal fun saveRefreshToken(token: String) {
+    fun saveRefreshToken(token: String) {
         authCache.saveRefreshToken(token)
     }
 
-    internal fun clearCache() {
+    fun clearCache() {
         authCache.clear()
     }
 
