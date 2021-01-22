@@ -1,1 +1,1 @@
-# ftl_auth_android
+# FTLAuth
