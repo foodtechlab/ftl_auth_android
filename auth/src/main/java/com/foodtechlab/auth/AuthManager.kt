@@ -13,7 +13,7 @@ import com.foodtechlab.auth.exception.formatError
 import com.foodtechlab.auth.exception.getString
 import com.foodtechlab.auth.exception.tryWithAuthChecking
 import com.foodtechlab.auth.utils.logError
-import okhttp3.Interceptor
+import okhttp3.OkHttpClient
 
 /**
  * Created by Umalt on 1/14/21
@@ -22,8 +22,7 @@ class AuthManager constructor(
     private val baseUrl: String,
     private val apiVersion: String,
     private val sharedPrefs: SharedPreferences,
-    private val apiInterceptor: Interceptor? = null,
-    private val httpLoggingInterceptor: Interceptor? = null,
+    private val okHttpClient: OkHttpClient,
     applicationContext: Context
 ) {
 
@@ -41,7 +40,7 @@ class AuthManager constructor(
     private val authCache by lazy { AuthPrefsCache(sharedPrefs) }
 
     private val authApiService by lazy {
-        AuthApiServiceFactory.makeAuthApiService(baseUrl, apiInterceptor, httpLoggingInterceptor)
+        AuthApiServiceFactory.makeAuthApiService(baseUrl, okHttpClient)
     }
 
     init {
@@ -115,7 +114,7 @@ class AuthManager constructor(
     suspend fun logout(): String? {
         return try {
             tryWithAuthChecking(this) {
-                authApiService.logout()
+                authApiService.logout(apiVersion)
             }?.result?.apply {
                 clearCache()
             }
