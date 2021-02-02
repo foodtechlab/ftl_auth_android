@@ -110,6 +110,7 @@ suspend fun <T : Any?> tryWithAuthChecking(
                                     shouldReauthorize = true
                                 )
                             }
+                            null
                         }
                     }
                     error?.details == NOT_EXIST && error.domain == USER -> {
@@ -121,6 +122,7 @@ suspend fun <T : Any?> tryWithAuthChecking(
                             cancellable = false,
                             shouldReauthorize = true
                         )
+                        null
                     }
                     else -> {
                         authManager.listener?.showMessage(
@@ -131,9 +133,9 @@ suspend fun <T : Any?> tryWithAuthChecking(
                             cancellable = false,
                             shouldReauthorize = true
                         )
+                        null
                     }
                 }
-                null
             }
             else -> {
                 authManager.listener?.showMessage(
