@@ -39,5 +39,7 @@ interface AuthApiService {
     ): BaseResponse<AuthResponse>
 
     @POST("{apiVersion}/auth/logout")
-    suspend fun logout(): BaseResponse<String>
+    suspend fun logout(
+        @Path(value = "apiVersion", encoded = true) apiVersion: String
+    ): BaseResponse<String>
 }

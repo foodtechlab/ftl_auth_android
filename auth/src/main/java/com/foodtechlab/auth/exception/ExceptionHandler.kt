@@ -72,8 +72,6 @@ suspend fun <T : Any?> tryWithAuthChecking(
 
         val error = ex.response()?.errorBody()?.stringSuspending()?.let { getErrorType(it) }
 
-        getString(R.string.common_ok)
-
         when (ex.code()) {
             401 -> {
                 if (error?.domain == AUTH) {
