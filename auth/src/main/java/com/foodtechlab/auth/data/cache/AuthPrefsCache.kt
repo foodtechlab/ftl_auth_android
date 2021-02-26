@@ -1,4 +1,4 @@
-package com.foodtechlab.auth.cache
+package com.foodtechlab.auth.data.cache
 
 import android.content.SharedPreferences
 import com.squareup.moshi.Moshi
@@ -6,7 +6,7 @@ import com.squareup.moshi.Moshi
 /**
  * Created by Umalt on 1/14/21
  */
-class AuthPrefsCache(private val prefs: SharedPreferences) : IAuthCache {
+class AuthPrefsCache(private val prefs: SharedPreferences) : AuthCache {
 
     private val authCacheModel by lazy {
         prefs.getString(KEY_TOKENS, null)?.let {

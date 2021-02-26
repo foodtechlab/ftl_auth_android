@@ -5,8 +5,8 @@ import androidx.annotation.StringRes
 import com.foodtechlab.auth.AuthManager
 import com.foodtechlab.auth.BuildConfig
 import com.foodtechlab.auth.R
-import com.foodtechlab.auth.api.model.response.ErrorResponse
-import com.foodtechlab.auth.api.model.response.PresentationData
+import com.foodtechlab.auth.data.api.model.response.ErrorResponse
+import com.foodtechlab.auth.data.api.model.response.PresentationData
 import com.foodtechlab.auth.utils.logError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

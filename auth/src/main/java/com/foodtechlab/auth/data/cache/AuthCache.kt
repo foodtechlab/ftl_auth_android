@@ -1,9 +1,9 @@
-package com.foodtechlab.auth.cache
+package com.foodtechlab.auth.data.cache
 
 /**
  * Created by Umalt on 1/14/21
  */
-interface IAuthCache {
+interface AuthCache {
 
     fun saveAccessToken(token: String?)
 
