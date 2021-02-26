@@ -47,7 +47,7 @@ class AuthManager constructor(
         AuthManager.applicationContext = applicationContext
     }
 
-    suspend fun authSms(phone: String): TimerResponse? {
+    suspend fun initSms(phone: String): TimerResponse? {
         return try {
             tryWithAuthChecking(this) {
                 authApiService.authSms(apiVersion, AuthRequest(phoneNumber = phone))

@@ -59,7 +59,7 @@ class MainPresenter : MvpPresenter<MainView>(), ExceptionHandlerListener {
     private fun authSms() {
         presenterScope.launch {
             try {
-                authManager.authSms("89029999999")
+                authManager.initSms("89029999999")
                 authManager.loginSms("12345", "89029999999")
             } catch (e: Exception) {
                 logError(TAG, e.formatError().second)
