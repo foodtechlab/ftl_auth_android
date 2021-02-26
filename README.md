@@ -5,7 +5,7 @@
 ## Features
 
 - **Аутентификация по одноразовому коду**. Действие выполняется в два шага: для начала надо инициализировать аутентификацию, передав на вход номер телефона, затем     полученный SMS-код используется для завершения аутенификации
-- **Аутентификация по паролю (username + password)**. В качестве username может вытсупать email
+- **Аутентификация по паролю (username + password)**. В качестве username может выступать email
 
 ## Installation
 
@@ -189,7 +189,7 @@ class SplashPresenter : BasePresenter<SplashView>() {
     @Inject
     lateinit var saveRefreshTokenUseCase: SaveRefreshTokenUseCase
     
-     init {
+    init {
         DIManager.getSplashSubcomponent().inject(this)
     }
 
