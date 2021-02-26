@@ -1,4 +1,4 @@
-package com.foodtechlab.auth.api.service
+package com.foodtechlab.auth.data.api.service
 
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

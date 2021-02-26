@@ -1,4 +1,4 @@
-package com.foodtechlab.auth.api.model.response
+package com.foodtechlab.auth.data.api.model.response
 
 /**
  * Created by Umalt on 1/14/21

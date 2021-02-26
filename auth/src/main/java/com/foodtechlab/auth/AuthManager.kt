@@ -2,12 +2,12 @@ package com.foodtechlab.auth
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.foodtechlab.auth.api.model.request.AuthRequest
-import com.foodtechlab.auth.api.model.request.RefreshRequest
-import com.foodtechlab.auth.api.model.response.AuthResponse
-import com.foodtechlab.auth.api.model.response.TimerResponse
-import com.foodtechlab.auth.api.service.AuthApiServiceFactory
-import com.foodtechlab.auth.cache.AuthPrefsCache
+import com.foodtechlab.auth.data.api.model.request.AuthRequest
+import com.foodtechlab.auth.data.api.model.request.RefreshRequest
+import com.foodtechlab.auth.data.api.model.response.AuthResponse
+import com.foodtechlab.auth.data.api.model.response.TimerResponse
+import com.foodtechlab.auth.data.api.service.AuthApiServiceFactory
+import com.foodtechlab.auth.data.cache.AuthPrefsCache
 import com.foodtechlab.auth.exception.ExceptionHandlerListener
 import com.foodtechlab.auth.exception.formatError
 import com.foodtechlab.auth.exception.getString

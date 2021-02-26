@@ -1,10 +1,10 @@
-package com.foodtechlab.auth.api.service
+package com.foodtechlab.auth.data.api.service
 
-import com.foodtechlab.auth.api.model.request.AuthRequest
-import com.foodtechlab.auth.api.model.request.RefreshRequest
-import com.foodtechlab.auth.api.model.response.AuthResponse
-import com.foodtechlab.auth.api.model.response.BaseResponse
-import com.foodtechlab.auth.api.model.response.TimerResponse
+import com.foodtechlab.auth.data.api.model.request.AuthRequest
+import com.foodtechlab.auth.data.api.model.request.RefreshRequest
+import com.foodtechlab.auth.data.api.model.response.AuthResponse
+import com.foodtechlab.auth.data.api.model.response.BaseResponse
+import com.foodtechlab.auth.data.api.model.response.TimerResponse
 import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.http.Path

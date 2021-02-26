@@ -7,7 +7,9 @@ import com.foodtechlab.authsample.utils.KEY_FTL_AUTH_PREFS_SETTINGS
 import com.foodtechlab.authsample.utils.net.ApiInterceptor
 import dagger.Module
 import dagger.Provides
+import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 /**
@@ -41,5 +43,19 @@ object ApplicationModule {
                 HttpLoggingInterceptor.Level.BODY
             }
         }
+    }
+
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(
+        apiInterceptor: ApiInterceptor,
+        httpLoggingInterceptor: HttpLoggingInterceptor
+    ): OkHttpClient {
+        return OkHttpClient.Builder()
+            .connectTimeout(5, TimeUnit.SECONDS)
+            .readTimeout(10, TimeUnit.SECONDS)
+            .addInterceptor(apiInterceptor)
+            .addInterceptor(httpLoggingInterceptor)
+            .build()
     }
 }

@@ -1,6 +1,6 @@
 package com.foodtechlab.auth.data.mapper
 
-import com.foodtechlab.auth.api.model.response.AuthResponse
+import com.foodtechlab.auth.data.api.model.response.AuthResponse
 import com.foodtechlab.auth.domain.entity.AuthEntity
 
 /**
